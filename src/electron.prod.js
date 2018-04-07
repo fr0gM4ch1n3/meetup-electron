@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -54,4 +54,14 @@ app.on('activate', () => {
     if (win === null) {
         createWindow();
     }
+});
+
+ipcMain.on('asynchronous-message', (event, arg) => {
+    console.log(arg); // prints "asynchronous-ping"
+    event.sender.send('asynchronous-reply', 'asynchronous-pong');
+});
+
+ipcMain.on('synchronous-message', (event, arg) => {
+    console.log(arg); // prints "synchronous-ping"
+    event.returnValue = 'synchronous-pong';
 });
